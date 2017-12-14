@@ -10,13 +10,44 @@ var connection = mysql.createConnection({
 })
 
 connection.connect(function(err){
+    if (err) throw err;
+    storeFront();
     console.log("Connected as id: "+connection.threadId);
 })
 
-var start = function(){
+function storeFront() {
     inquirer.prompt({
-        name:"purchaseItem",
-        type:"rawlist",
-        message:"What would you like to purchase?"
+        name: "invite",
+        type: "list",
+        message: "Would you like to go shopping?",
+        choices: [
+            "Yes",
+            "No"
+        ]
     })
-}
+    .then(function(answer) {
+        switch (answer.invite) {
+            case "Yes": itemsForSale();
+            break;
+            case "No": console.log("Sounds good. We'll be here when you need us.") /*&& process.exit()*/;
+
+        }
+    });
+};
+
+var itemsForSale = function(){
+    var query = "SELECT * FROM products";
+    connection.query(query, function (err, res) {
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].products);
+        }
+    });
+};
+
+// var shopping = function () {
+//     inquirer.prompt({
+//         name: "purchaseItem",
+//         type: "rawlist",
+//         message: "What would you like to purchase?"
+//     })
+// }
