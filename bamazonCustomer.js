@@ -36,7 +36,7 @@ function storeFront() {
 };
 
 var itemsForSale = function(){
-    var query = "SELECT * FROM products";
+    var query = "SELECT * FROM bamazondb.products";
     connection.query(query, function (err, res) {
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].products);
