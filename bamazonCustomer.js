@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
 connection.connect(function(err){
     if (err) throw err;
     storeFront();
-    console.log("Connected as id: "+connection.threadId);
+    // console.log("Connected as id: " + connection.threadId);
 })
 
 function storeFront() {
