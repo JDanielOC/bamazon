@@ -42,7 +42,7 @@ function storeFront() {
 
 // goShopping function that lists inventory and prompts interaction with consumer.
 var goShopping = function () {
-    var queryStock = "SELECT item_id, product_name, price FROM bamazondb.products";
+    var queryStock = `SELECT item_id, product_name, price FROM bamazondb.products`;
     connection.query(queryStock, function (err, res) {
         for (var i = 0; i < res.length; i++) {
             console.log(`\n------------------------------\nItem ID:\t${res[i].item_id}\nProduct Name:\t${res[i].product_name}\nPrice:\t\t${res[i].price} USD\n`)
@@ -66,11 +66,13 @@ var goShopping = function () {
                 filter: Number,
                 default: 0
             },
+
         ]).then(function (input) {
             var item = input.item_id;
             var quantity = input.quantity;
 
-            var queryShop = "SELECT * FROM products WHERE ?";
+            // var queryShop = "SELECT * FROM products WHERE ?";
+            var queryShop = `SELECT * FROM products WHERE ?`;
             connection.query(queryShop, {
                     item_id: item
                 }, function (err, data) {
@@ -86,16 +88,19 @@ var goShopping = function () {
                         if (quantity === 0) {
                             console.log('Nothing from nothing leaves nothing. You gotta have something.');
                             goShopping();
+
                         } else if (quantity > 0 && quantity <= productData.stock_quantity) {
                             console.log("We have that in stock. Hang on a minute and we'll get it for you.");
+
                             // update query to take item from inventory and update the database
-                            var queryUpdate = ("UPDATE products SET stock_quantity = " + (productData.stock_quantity - quantity) + " WHERE item_id = " + item);
+                            var queryUpdate = `UPDATE products SET stock_quantity = ${productData.stock_quantity - quantity} WHERE item_id = ${item}`;
+
                             connection.query(queryUpdate, function (err, data) {
                                 if (err) throw err;
 
                                 console.log("Thank you! Your order is being processed.");
                                 connection.end();
-                            })
+                            });
 
                         } else {
                             console.log("We don't have that in stock at the moment.")
